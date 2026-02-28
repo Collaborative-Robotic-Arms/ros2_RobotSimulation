@@ -90,7 +90,7 @@ def generate_launch_description():
     print("")
 
     print("ros2_RobotSimulation --> ABB IRB-120")
-    print("Launch file -> irb120_interface.launch.py")
+    print("Launch file -> irb120.launch.py")
 
     print("")
     print("Robot configuration:")
@@ -160,7 +160,7 @@ def generate_launch_description():
         "EE_schunk": EE_schunk,
         })
     robot_description_config = doc.toxml()
-    robot_description = {'robot_description': robot_description_config}
+    robot_description = {'robot_description': robot_description_config, 'use_sim_time': True, }
 
     # SPAWN ROBOT TO GAZEBO:
     spawn_entity = Node(package='gz_ros2', executable='spawn_entity.py',
@@ -186,39 +186,6 @@ def generate_launch_description():
         parameters=[robot_description],
     )
 
-    # ***** ROS2_CONTROL -> LOAD CONTROLLERS ***** #
-
-    if (EE_no == "true"):
-        load_controllers = []
-        for controller in [
-            "irb120_controller",
-            "joint_state_controller",
-        ]:
-            load_controllers += [
-                ExecuteProcess(
-                    cmd=["ros2 run controller_manager spawner.py {}".format(controller)],
-                    shell=True,
-                    output="screen",
-                )
-            ]
-    
-    # === SCHUNK EGP-64 === #
-    elif (EE_schunk == "true"):
-        load_controllers = []
-        for controller in [
-            "irb120_controller",
-            "joint_state_controller",
-            "egp64_finger_left_controller",
-            "egp64_finger_right_controller",
-        ]:
-            load_controllers += [
-                ExecuteProcess(
-                    cmd=["ros2 run controller_manager spawner.py {}".format(controller)],
-                    shell=True,
-                    output="screen",
-                )
-            ]
-    # === SCHUNK EGP-64 === #
 
 
     # *********************** MoveIt!2 *********************** #   
@@ -325,93 +292,18 @@ def generate_launch_description():
         ],
         condition=UnlessCondition(load_RVIZfile),
     )
-
-    # *********************** ROS2.0 Robot/End-Effector Actions/Triggers *********************** #
-    # MoveJ ACTION:
-    moveJ_interface = Node(
-        name="moveJ_action",
-        package="ros2_actions",
-        executable="moveJ_action",
-        output="screen",
-        parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"ROB_PARAM": 'irb120_arm'}],
-    )
-    # MoveG ACTION:
-    moveG_interface = Node(
-        name="moveG_action",
-        package="ros2_actions",
-        executable="moveG_action",
-        output="screen",
-        parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"ROB_PARAM": 'egp64'}],
-    )
-    # MoveXYZW ACTION:
-    moveXYZW_interface = Node(
-        name="moveXYZW_action",
-        package="ros2_actions",
-        executable="moveXYZW_action",
-        output="screen",
-        parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"ROB_PARAM": 'irb120_arm'}],
-    )
-    # MoveL ACTION:
-    moveL_interface = Node(
-        name="moveL_action",
-        package="ros2_actions",
-        executable="moveL_action",
-        output="screen",
-        parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"ROB_PARAM": 'irb120_arm'}],
-    )
-    # MoveR ACTION:
-    moveR_interface = Node(
-        name="moveR_action",
-        package="ros2_actions",
-        executable="moveR_action",
-        output="screen",
-        parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"ROB_PARAM": 'irb120_arm'}],
-    )
-    # MoveXYZ ACTION:
-    moveXYZ_interface = Node(
-        name="moveXYZ_action",
-        package="ros2_actions",
-        executable="moveXYZ_action",
-        output="screen",
-        parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"ROB_PARAM": 'irb120_arm'}],
-    )
-    # MoveYPR ACTION:
-    moveYPR_interface = Node(
-        name="moveYPR_action",
-        package="ros2_actions",
-        executable="moveYPR_action",
-        output="screen",
-        parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"ROB_PARAM": 'irb120_arm'}],
-    )
-    # MoveROT ACTION:
-    moveROT_interface = Node(
-        name="moveROT_action",
-        package="ros2_actions",
-        executable="moveROT_action",
-        output="screen",
-        parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"ROB_PARAM": 'irb120_arm'}],
-    )
-    # MoveRP ACTION:
-    moveRP_interface = Node(
-        name="moveRP_action",
-        package="ros2_actions",
-        executable="moveRP_action",
-        output="screen",
-        parameters=[robot_description, robot_description_semantic, kinematics_yaml, {"ROB_PARAM": 'irb120_arm'}],
-    )
-
-    # ATTACHER action for ros2_grasping plugin:
-    Attacher = Node(
-        name="ATTACHER_action",
-        package="ros2_grasping",
-        executable="attacher_action.py",
-        output="screen",
-    )
-
+#load the controller manager with the controllers created 
+    controller_manager_node = Node(
+           package='controller_manager',
+            executable='spawner',
+            arguments=['joint_state_broadcaster', 'irb120_controller'],
+            output='screen'
+        )
     return LaunchDescription(
         [
             # Gazebo nodes:
             gazebo, 
+           # controller_manager_node,
             spawn_entity,
             # ROS2_CONTROL:
             static_tf,
@@ -432,26 +324,9 @@ def generate_launch_description():
                             ]
                         ),
 
-                        # ROS2.0 Actions:
-                        TimerAction(
-                            period=2.0,
-                            actions=[
-                                moveJ_interface,
-                                moveG_interface,
-                                moveL_interface,
-                                moveR_interface,
-                                moveXYZ_interface,
-                                moveXYZW_interface,
-                                moveYPR_interface,
-                                moveROT_interface,
-                                moveRP_interface,
-                                Attacher,
-                            ]
-                        ),
-
                     ]
                 )
             )
         ]
-        + load_controllers
+       
     )

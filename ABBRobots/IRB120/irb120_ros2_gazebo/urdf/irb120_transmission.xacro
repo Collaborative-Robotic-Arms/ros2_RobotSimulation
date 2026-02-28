@@ -1,146 +1,90 @@
 <?xml version="1.0"?>
 
-<!-- 
-
-# ===================================== COPYRIGHT ===================================== #
-#                                                                                       #
-#  IFRA (Intelligent Flexible Robotics and Assembly) Group, CRANFIELD UNIVERSITY        #
-#  Created on behalf of the IFRA Group at Cranfield University, United Kingdom          #
-#  E-mail: IFRA@cranfield.ac.uk                                                         #
-#                                                                                       #
-#  Licensed under the Apache-2.0 License.                                               #
-#  You may not use this file except in compliance with the License.                     #
-#  You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0  #
-#                                                                                       #
-#  Unless required by applicable law or agreed to in writing, software distributed      #
-#  under the License is distributed on an "as-is" basis, without warranties or          #
-#  conditions of any kind, either express or implied. See the License for the specific  #
-#  language governing permissions and limitations under the License.                    #
-#                                                                                       #
-#  IFRA Group - Cranfield University                                                    #
-#  AUTHORS: Mikel Bueno Viso - Mikel.Bueno-Viso@cranfield.ac.uk                         #
-#           Seemal Asif      - s.asif@cranfield.ac.uk                                   #
-#           Phil Webb        - p.f.webb@cranfield.ac.uk                                 #
-#                                                                                       #
-#  Date: July, 2022.                                                                    #
-#                                                                                       #
-# ===================================== COPYRIGHT ===================================== #
-
-# ===================================== COPYRIGHT ===================================== #
-#                                                                                       #
-#  Some of the information used to build the ROS2 ABB-IRB120 .urdf files in this ROS2   #
-#  repository has been taken from the following resource:                               #
-#       - abb_experimental (https://github.com/ros-industrial/abb_experimental)         #
-#                                                                                       #
-#  AUTHORS:                                                                             #
-#       - ROS-Industrial - https://rosindustrial.org                                    #
-#       - Mark Culleton (Trinity College Dublin) - culletom@tcd.ie                      #
-#       - Kevin Kelly   (Trinity College Dublin)                                        #
-#                                                                                       #
-#  COPYRIGHT - ROS-Industrial                                                           #
-#  (ORIGINAL LICENSE) -> Licensed under the Apache-2.0 License.                         #
-#                                                                                       #
-#  CHANGES MADE:                                                                        #
-#  The original files contain the .urdf information of the robot for ROS1, and these    #
-#  have been modified for ROS2.                                                         #
-#                                                                                       #
-# ===================================== COPYRIGHT ===================================== #
-
-# ======= CITE OUR WORK ======= #
-# You can cite our work with the following statement:
-# IFRA (2022) ROS2.0 ROBOT SIMULATION. URL: https://github.com/IFRA-Cranfield/ros2_RobotSimulation.
-
--->
 
 <robot xmlns:xacro="http://wiki.ros.org/xacro">
 
   <xacro:macro name="irb120_transmission" params="prefix EE_schunk">
 
-    <transmission name="irb120_joint1_trans">
+    <transmission name="joint_1_trans">
       <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}irb120_joint1">
+      <joint_ name="joint_1">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="irb120_joint1_motor">
+      </joint_>
+      <actuator name="joint_1_motor">
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
 
-    <transmission name="irb120_joint2_trans">
+    <transmission name="joint_2_trans">
       <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}irb120_joint2">
+      <joint_ name="joint_2">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="irb120_joint2_motor">
+      </joint_>
+      <actuator name="joint_2_motor">
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
 
-    <transmission name="irb120_joint3_trans">
+    <transmission name="joint_3_trans">
       <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}irb120_joint3">
+      <joint_ name="joint_3">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="irb120_joint3_motor">
+      </joint_>
+      <actuator name="joint_3_motor">
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
 
-    <transmission name="irb120_joint4_trans">
+    <transmission name="joint_4_trans">
       <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}irb120_joint4">
+      <joint_ name="joint_4">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="irb120_joint4_motor">
+      </joint_>
+      <actuator name="joint_4_motor">
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
 
-    <transmission name="irb120_joint5_trans">
+    <transmission name="joint_5_trans">
       <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}irb120_joint5">
+      <joint_ name="joint_5">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="irb120_joint5_motor">
+      </joint_>
+      <actuator name="joint_5_motor">
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
 
-    <transmission name="irb120_joint6_trans">
+    <transmission name="joint_6_trans">
       <type>transmission_interface/SimpleTransmission</type>
-      <joint name="${prefix}irb120_joint6">
+      <joint_ name="joint_6">
         <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-      </joint>
-      <actuator name="irb120_joint6_motor">
+      </joint_>
+      <actuator name="joint_6_motor">
         <mechanicalReduction>1</mechanicalReduction>
       </actuator>
     </transmission>
 
-    <!-- =================================== -->
-    <!-- ========== END-EFFECTORS ========== -->
-
-    <!-- === SCHUNK EGP-64 GRIPPER === -->
     <xacro:if value="${EE_schunk}">
       <transmission name="egp64_left_finger_trans">
         <type>transmission_interface/SimpleTransmission</type>
-        <joint name="egp64_finger_left_joint">
+        <joint_ name="egp64_finger_left_joint_">
           <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        </joint>
+        </joint_>
         <actuator name="egp64_left_finger_motor">
           <mechanicalReduction>1</mechanicalReduction>
         </actuator>
       </transmission>
       <transmission name="egp64_right_finger_trans">
         <type>transmission_interface/SimpleTransmission</type>
-        <joint name="egp64_finger_right_joint">
+        <joint_ name="egp64_finger_right_joint_">
           <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
-        </joint>
+        </joint_>
         <actuator name="egp64_right_finger_motor">
           <mechanicalReduction>1</mechanicalReduction>
         </actuator>
       </transmission>  
     </xacro:if>
-    <!-- === SCHUNK EGP-64 GRIPPER === -->
 
   </xacro:macro>
 

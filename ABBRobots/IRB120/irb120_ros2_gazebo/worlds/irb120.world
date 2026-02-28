@@ -50,7 +50,7 @@
     <!-- GAZEBO PLUGINS: -->
     <!-- The following plugins must be activated for the ros2_grasping to effectively work: -->
 
-    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+    <plugin name="gz_ros2_state" filename="libgz_ros2_state.so">
       <ros>
         <namespace>/ros2_grasp</namespace>
         <argument>model_states:=model_states</argument>
@@ -59,7 +59,7 @@
       <update_rate>1.0</update_rate>
     </plugin>
 
-    <plugin name="gazebo_ros_properties" filename="libgazebo_ros_properties.so">
+    <plugin name="gz_ros2_properties" filename="libgz_ros2_properties.so">
       <ros>
         <namespace>/ros2_grasp</namespace>
       </ros>

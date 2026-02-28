@@ -75,7 +75,7 @@ def generate_launch_description():
     # DECLARE Gazebo LAUNCH file:
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
+                    get_package_share_directory('gz_ros2'), 'launch'), '/gazebo.launch.py']),
                 launch_arguments={'world': irb120_ros2_gazebo}.items(),
              )
     
@@ -165,9 +165,15 @@ def generate_launch_description():
         output='screen',
         parameters=[robot_description]
     )
-
+#load the controller manager with the controllers created 
+    controller_manager_node = Node(
+           package='controller_manager',
+            executable='spawner',
+            arguments=['joint_state_broadcaster', 'irb120_controller'],
+            output='screen'
+        )
     # SPAWN ROBOT TO GAZEBO:
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+    spawn_entity = Node(package='gz_ros2', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
                                    '-entity', 'irb120'],
                         output='screen')
@@ -176,5 +182,6 @@ def generate_launch_description():
     return LaunchDescription([
         gazebo, 
         node_robot_state_publisher,
-        spawn_entity
+        spawn_entity,
+        controller_manager_node
     ])

@@ -26,9 +26,9 @@ attacher_action.py:
 ### Requirements
 The following steps must be done for the ros2_grasping package to work:
 
-1. The "gazebo_ros_state" and "gazebo_ros_properties" plugins must be included in every single Gazebo Simulation environment. This is done by including the following tags into the .world file:
+1. The "gz_ros2_state" and "gz_ros2_properties" plugins must be included in every single Gazebo Simulation environment. This is done by including the following tags into the .world file:
     ```sh
-    <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
+    <plugin name="gz_ros2_state" filename="libgz_ros2_state.so">
         <ros>
             <namespace>/ros2_grasp</namespace>
             <argument>model_states:=model_states</argument>
@@ -37,7 +37,7 @@ The following steps must be done for the ros2_grasping package to work:
         <update_rate>1.0</update_rate>
     </plugin>
 
-    <plugin name="gazebo_ros_properties" filename="libgazebo_ros_properties.so">
+    <plugin name="gz_ros2_properties" filename="libgz_ros2_properties.so">
         <ros>
             <namespace>/ros2_grasp</namespace>
         </ros>

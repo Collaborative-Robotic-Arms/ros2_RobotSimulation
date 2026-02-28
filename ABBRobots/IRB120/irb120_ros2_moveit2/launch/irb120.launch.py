@@ -79,7 +79,7 @@ def generate_launch_description():
     # DECLARE Gazebo LAUNCH file:
     gazebo = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory('gazebo_ros'), 'launch'), '/gazebo.launch.py']),
+                    get_package_share_directory('gz_ros2'), 'launch'), '/gazebo.launch.py']),
                 launch_arguments={'world': irb120_ros2_gazebo}.items(),
              )
 
@@ -160,10 +160,10 @@ def generate_launch_description():
         "EE_schunk": EE_schunk,
         })
     robot_description_config = doc.toxml()
-    robot_description = {'robot_description': robot_description_config}
+    robot_description = {'robot_description': robot_description_config, 'use_sim_time': True, }
 
     # SPAWN ROBOT TO GAZEBO:
-    spawn_entity = Node(package='gazebo_ros', executable='spawn_entity.py',
+    spawn_entity = Node(package='gz_ros2', executable='spawn_entity.py',
                         arguments=['-topic', 'robot_description',
                                    '-entity', 'irb120'],
                         output='screen')
@@ -186,39 +186,6 @@ def generate_launch_description():
         parameters=[robot_description],
     )
 
-    # ***** ROS2_CONTROL -> LOAD CONTROLLERS ***** #
-
-    if (EE_no == "true"):
-        load_controllers = []
-        for controller in [
-            "irb120_controller",
-            "joint_state_controller",
-        ]:
-            load_controllers += [
-                ExecuteProcess(
-                    cmd=["ros2 run controller_manager spawner.py {}".format(controller)],
-                    shell=True,
-                    output="screen",
-                )
-            ]
-    
-    # === SCHUNK EGP-64 === #
-    elif (EE_schunk == "true"):
-        load_controllers = []
-        for controller in [
-            "irb120_controller",
-            "joint_state_controller",
-            "egp64_finger_left_controller",
-            "egp64_finger_right_controller",
-        ]:
-            load_controllers += [
-                ExecuteProcess(
-                    cmd=["ros2 run controller_manager spawner.py {}".format(controller)],
-                    shell=True,
-                    output="screen",
-                )
-            ]
-    # === SCHUNK EGP-64 === #
 
 
     # *********************** MoveIt!2 *********************** #   
@@ -325,11 +292,18 @@ def generate_launch_description():
         ],
         condition=UnlessCondition(load_RVIZfile),
     )
-
+#load the controller manager with the controllers created 
+    controller_manager_node = Node(
+           package='controller_manager',
+            executable='spawner',
+            arguments=['joint_state_broadcaster', 'irb120_controller'],
+            output='screen'
+        )
     return LaunchDescription(
         [
             # Gazebo nodes:
             gazebo, 
+            controller_manager_node,
             spawn_entity,
             # ROS2_CONTROL:
             static_tf,
@@ -354,5 +328,5 @@ def generate_launch_description():
                 )
             )
         ]
-        + load_controllers
+       
     )
